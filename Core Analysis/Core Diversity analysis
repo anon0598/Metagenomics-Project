@@ -1,0 +1,36 @@
+#!/bin/bash --login
+#PBS -l walltime=02:00:00
+#PBS -l select=1:ncpus=8
+#PBS -N core_diversity2
+#PBS -A d411-training
+#PBS -j oe
+
+### script start
+
+echo "setting temporary directory"
+mkdir -p ~/qiime_tmp
+export TMPDIR=~/qiime_tmp
+
+echo "loading virtual environment"
+conda deactivate
+conda activate qiime1
+
+echo "creating and cd to output directory"
+mkdir -p ~/output/bioc0023/
+cd ~/output/bioc0023/
+
+# QIIME Code
+
+core_diversity_analyses.py \
+-i ./otus_2/otu_table.biom \
+-m ./anosim_mf.tsv \
+-t ./otus_2/97_otus.tree \
+-o ./cdout2 \
+-e 30000 \
+-a -O 8 \
+--recover_from_failure
+
+echo "closing environment"
+conda deactivate
+
+### end start
