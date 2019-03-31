@@ -1,0 +1,30 @@
+#!/bin/bash --login
+#PBS -l walltime=00:20:00
+#PBS -l select=1:ncpus=2
+#PBS -N beta_significance
+#PBS -A d411-training
+#PBS -j oe
+
+### script start
+
+echo "setting temporary directory"
+mkdir -p ~/qiime_tmp
+export TMPDIR=~/qiime_tmp
+
+echo "loading virtual environment"
+conda deactivate
+conda activate qiime1
+
+echo "creating and cd to output directory"
+mkdir -p ~/output/bioc0023/
+cd ~/output/bioc0023/
+
+# QIIME Code
+
+beta_significance.py  -i ./otus_2/otu_table.biom -t ./otus_2/97_otus.tree -s weighted_unifrac -o w_sig.txt
+
+echo "closing environment"
+
+conda deactivate
+
+#end script
