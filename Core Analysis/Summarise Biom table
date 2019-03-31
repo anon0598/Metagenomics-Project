@@ -1,0 +1,26 @@
+#!/bin/bash --login
+#PBS -l walltime=2:00:00
+#PBS -l select=1:ncpus=8
+#PBS -N biom_summarise_table
+#PBS -A d411-training
+#PBS -j oe
+
+### script start
+
+echo "setting temporary directory"
+mkdir -p ~/qiime_tmp
+export TMPDIR=~/qiime_tmp
+
+echo "loading virtual environment"
+conda deactivate
+conda activate qiime1
+
+echo "creating and cd to output directory"
+mkdir -p ~/output/bioc0023/otus_8c_team19/
+cd ~/output/bioc0023/otus_8c_team19/
+
+# QIIME Code
+
+biom summarize-table -i ./otu_table.biom -o otu_summary_table
+echo "closing environment"
+conda deactivate
