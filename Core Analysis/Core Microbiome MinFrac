@@ -1,0 +1,35 @@
+#!/bin/bash --login
+#PBS -l walltime=0:30:00
+#PBS -l select=1:ncpus=8
+#PBS -N core_microbiome_minfrac
+#PBS -A d411-training
+#PBS -j oe
+
+### script start
+
+echo "setting temporary directory"
+mkdir -p ~/qiime_tmp
+export TMPDIR=~/qiime_tmp
+
+echo "loading virtual environment"
+conda deactivate
+conda activate qiime1
+
+echo "creating and cd to output directory"
+mkdir -p ~/output/bioc0023/
+cd ~/output/bioc0023
+
+# QIIME Code
+
+compute_core_microbiome.py -i ./otus_2/tax2/otu_table_L2.biom -o otu_table_core_before_minfrac --min_fraction_for_core 0.3  --mapping_fp ./anosim_mf.tsv  --valid_states "Time:Before"
+
+compute_core_microbiome.py -i ./otus_2/tax2/otu_table_L2.biom -o otu_table_core_immediatewash_minfrac --min_fraction_for_core 0.3 --mapping_fp ./anosim_mf.tsv  --valid_states "Time:ImmediateWash"
+
+compute_core_microbiome.py -i ./otus_2/tax2/otu_table_L2.biom -o otu_table_core_thirtymins_minfrac --min_fraction_for_core 0.3 --mapping_fp ./anosim_mf.tsv  --valid_states "Time:ThirtyMinutes"
+
+compute_core_microbiome.py -i ./otus_2/tax2/otu_table_L2.biom -o otu_table_core_twohrs_minfrac --min_fraction_for_core 0.3 --mapping_fp ./anosim_mf.tsv  --valid_states "Time:TwoHours"
+
+#end script
+
+echo "closing environment"
+conda deactivate
