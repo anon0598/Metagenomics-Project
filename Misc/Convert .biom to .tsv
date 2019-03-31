@@ -1,0 +1,27 @@
+#!/bin/bash --login
+#PBS -l walltime=1:00:00
+#PBS -l select=1:ncpus=8
+#PBS -N convert_otu
+#PBS -A d411-training
+#PBS -j oe
+
+### script start
+
+echo "setting temporary directory"
+mkdir -p ~/qiime_tmp
+export TMPDIR=~/qiime_tmp
+
+echo "loading virtual environment"
+conda deactivate
+conda activate qiime1
+
+echo "creating and cd to output directory"
+mkdir -p ~/output/
+cd ~/output/
+
+# QIIME Code
+
+biom convert -i ./bioc0023/otus_2/tax2/otu_table_L2.biom -o otu_table_L2.tsv --to-tsv --header-key taxonomy
+
+echo "closing environment"
+conda deactivate
